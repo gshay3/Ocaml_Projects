@@ -44,19 +44,19 @@ let move (nfa: ('q,'s) nfa_t) (qs: 'q list) (s: 's option) : 'q list =
   | Some x ->
     if List.mem x nfa.sigma then
      let lst = List.filter  (fun t -> s = t.input && (List.mem (fst t.states) qs)) nfa.delta in
-     List.fold_left (fun a h -> (snd h)::a) [] lst
+     List.fold_left (fun a h -> (snd h.states)::a) [] lst
     else []
   | None ->
     let lst = List.filter  (fun t -> s = t.input && (List.mem (fst t.states) qs)) nfa.delta in
-    List.fold_left (fun a h -> (snd h)::a) [] lst 
+    List.fold_left (fun a h -> (snd h.states)::a) [] lst 
 ;;
 
 (*Computes the epsilon closure of a set of states.*)
 let e_closure (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list =
   let rec helper l =
     let lst = List.filter  (fun t -> t.input = None && (List.mem (fst t.states) l)) nfa.delta in
-    let new_lst = List.sort_uniq compare (l@(List.fold_left (fun a h -> (snd h)::a) [] lst)) in
-    if l = new_lst then new_lst else helper nfa new_lst in
+    let new_lst = List.sort_uniq compare (l@(List.fold_left (fun a h -> (snd h.states)::a) [] lst)) in
+    if l = new_lst then new_lst else helper new_lst in
   helper qs
 ;;
 
